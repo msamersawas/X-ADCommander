@@ -1,0 +1,7 @@
+Menu_ID,Menu_Name
+1, "Reset Password"
+2, "New Admin User"
+3, "Add User to Group"
+4, "Exit to AD drive-prompt"
+5, "Go back to Domains menu"
+6, "New Service Account in a New OU"
