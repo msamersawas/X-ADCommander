@@ -54,9 +54,9 @@ while ($true) {
                 1 { Reset-Password }
                 2 { New-Admin-User }
                 3 { Add-User-to-Group }
-                4 { Exit }
+                4 { New-Service-Account-in-a-New-OU }
                 5 { break SubMenuExitLabel }
-                6 { New-Service-Account-in-a-New-OU }
+                6 { Exit }
                 default { Write-Warning "Unknown Option: $SelectedMenuID" }
             }
         } until (
