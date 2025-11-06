@@ -24,8 +24,6 @@ function New-ADDrive {
         [Parameter(Mandatory = $true,
             Position = 0,
             ValueFromPipeline = $true
-            #ValueFromPipelineByPropertyName=$true,
-            #MUTUALLY EXCLUSIVE WITH ValueFromPipelineByPropertyName and with ValueFromPipeline and ValueFromPipelineByPropertyName in other ParameterSets
         )]
         [string[]]$DomainControllers,
         [Parameter(Mandatory = $true,
@@ -53,14 +51,12 @@ function New-ADDrive {
             Write-error -Message "Unable to create an Active Directory drive because no online Domain Controller was reachable." -ErrorAction Stop
             Return
         }
-        #Import-Module ActiveDirectory -Force -WarningAction SilentlyContinue
         try {
-            $DomainRoot = (Get-ADDomain -Server $Server -Credential $Credential).DistinguishedName # TAKING FOREVER :( :( :)
+            $DomainRoot = (Get-ADDomain -Server $Server -Credential $Credential).DistinguishedName
             $ADDriveName = (Get-ADDomain -Server $Server -Credential $Credential).Name
             $ADDrive = New-PSDrive -Name $ADDriveName -PSProvider ActiveDirectory -Root $DomainRoot -Credential $Credential -Server $Server -Scope Global -EA Stop
         }
         catch {
-            #Write-error -Message "Unable to create an Active Directory drive. This was due to: $($_.Exception.message)`n" -ErrorAction Stop
             $ErrorRecord = [System.Management.Automation.ErrorRecord]::new(
                 [System.Management.Automation.DriveNotFoundException]::new("Unable to create an Active Directory drive for server $Server. $($_.Exception.message)"),
                 'ADDriveCreationFailed',

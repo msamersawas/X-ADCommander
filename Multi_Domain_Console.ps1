@@ -4,8 +4,8 @@ $ModulePath = "$PSScriptRoot\WindowsPowerShell\Modules\AD"
 Get-ChildItem $ModulePath -Include '*.psm1' -Recurse | Import-Module -Force -erroraction Stop
 $ADDriveName =  $Domain = $NewADDrive = ''
 $UsedADDrives = @()
-Set-Location $PSScriptRoot
 Push-Location
+Set-Location $PSScriptRoot
 
 $DomainControllerIP = [ordered]@{}
 Import-Csv "$PSScriptRoot\Domain_Controllers_IPs.csv" | ForEach-Object { $DomainControllerIP[$_.Domain] = $_.IP }
@@ -13,7 +13,7 @@ $Options = [string[]]$DomainControllerIP.keys
 
 :MainMenuExitLabel
 while ($true) {
-    #Clear-Host -Force
+    Clear-Host -Force
     $Option = Show-Menu -Title 'Domains' -Choices $Options
     if ($Option -eq 0) { 
         break MainMenuExitLabel 
@@ -37,9 +37,9 @@ while ($true) {
         catch {
             $ErrorDetails = $_.Exception.Message
              "AD drive creation failed for $($Credential.Username) in $Domain. ErrorDetails: $ErrorDetails"
-            $Confirm = Read-Host -Prompt "Type 'y' if you want to try again or type anything else to exit"
+            $Confirm = Read-Host -Prompt "`nType 'y' if you want to return to the domain selection menu again or type anything else to exit"
             if ($Confirm -notin 'y', 'Y') {
-                exit
+                break MainMenuExitLabel
             }
             continue
         }
@@ -53,7 +53,7 @@ while ($true) {
     $Actions = [string[]]$Level_2_Menus.Values
     :SubMenuExitLabel
     while ($true) {
-        #clear-host -Force
+        Clear-host -Force
         $SelectedMenuID = Show-Menu -Title "Actions for Domain:$Domain" -Choices $Actions
         if ($SelectedMenuID -eq 0) { break MainMenuExitLabel }
         $SelectedMenu = $Level_2_Menus[$SelectedMenuID - 1]
@@ -64,7 +64,7 @@ while ($true) {
                 3 { AddGroupMember $Domain}
                 4 { NewServiceAccountInNewOU $Domain}
                 5 { break SubMenuExitLabel }
-                6 { Exit }
+                6 { exit }
                 default { Write-Warning "Unknown Option: $SelectedMenuID" }
             }
         } until (
@@ -76,5 +76,8 @@ while ($true) {
 Pop-Location
 Write-Verbose "Removing AD drives used: $UsedADDrives"
 # Remove all previously used AD drives
-$UsedADDrives | % {remove-PSDrive $_}
+$UsedADDrives | 
+    ForEach-Object {
+            Remove-PSDrive $_ -ErrorAction SilentlyContinue
+    }
 Return

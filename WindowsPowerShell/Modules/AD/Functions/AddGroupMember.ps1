@@ -5,13 +5,12 @@ function AddGroupMember {
         Write-Host "Connection with the domain $Domain is no longer valid, exit and start over again" -ForegroundColor Red
         exit
     }
-    
     $Username = read-host -Prompt "Username"
     $Group = read-host -Prompt "Group"
     "`n"; Write-Warning "Adding $Username to $Group in $Domain..............`n"
     try {
         Add-ADGroupMember $Group -Members $Username -ErrorAction Stop
-        Write-Host "User $Username added to $Group in $Domain successfully." -ForegroundColor Green
+        Write-Host "User $Username has been added to $Group in $Domain successfully." -ForegroundColor Green
     }
     catch {
         $ErrorDetails = $_.Exception.Message
