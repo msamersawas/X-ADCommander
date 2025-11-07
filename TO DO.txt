@@ -1,4 +1,6 @@
 
+when exiting to AD drive prompt the kept drive does not get removed on next run
+
 in NewAdminUser fix hardcoded OU 
 
 in NewServiceAccountInNewOU fix hardcoded OU & $OUName & $MYADDrive
@@ -9,7 +11,6 @@ on v 5.1, dark scheme is needed
 
 when back from sub menu to main, text remanents from sub keep showing and intervene with main
 
-when exiting to AD drive prompt the kept drive does not get removed on next run
 
 Fixed:
 Switching from dom1 to dom2 then to dom1 again : Unable to create an Active Directory drive for server x.x.x.x. A drive with the name 'dom1' already exists.

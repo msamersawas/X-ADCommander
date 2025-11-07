@@ -3,9 +3,17 @@ param()
 $ModulePath = "$PSScriptRoot\WindowsPowerShell\Modules\AD"
 Get-ChildItem $ModulePath -Include '*.psm1' -Recurse | Import-Module -Force -erroraction Stop
 $ADDriveName =  $Domain = $NewADDrive = ''
-$UsedADDrives = @()
-Push-Location
+$UsedADDrives = [System.Collections.Generic.List[string]]::new()
+# Detect existing AD drives from a previous session to track them for clean-up (removal)
+$AllDomains = Import-Csv "$PSScriptRoot\Domain_Controllers_IPs.csv" | 
+    ForEach-Object { $_.Domain}
+Get-PSDrive |
+    Where-Object {($_.Name -in $AllDomains) -and ($_.Provider -match 'ActiveDirectory')} |
+    Select-Object -ExpandProperty Name |
+    ForEach-Object {$UsedADDrives.Add($_.ToLower())}
+
 Set-Location $PSScriptRoot
+Push-Location
 
 $DomainControllerIP = [ordered]@{}
 Import-Csv "$PSScriptRoot\Domain_Controllers_IPs.csv" | ForEach-Object { $DomainControllerIP[$_.Domain] = $_.IP }
@@ -13,7 +21,7 @@ $Options = [string[]]$DomainControllerIP.keys
 
 :MainMenuExitLabel
 while ($true) {
-    Clear-Host -Force
+    #Clear-Host -Force
     $Option = Show-Menu -Title 'Domains' -Choices $Options
     if ($Option -eq 0) { 
         break MainMenuExitLabel 
@@ -30,7 +38,7 @@ while ($true) {
         try {
             $NewADDrive = New-ADDrive -DomainControllers $Server -Credential $Credential -ErrorAction Stop
             $ADDriveName = "$($NewADDrive):" 
-            $UsedADDrives = $UsedADDrives + $NewADDrive.Name
+            $UsedADDrives.Add(($NewADDrive.Name).ToLower())
             Write-Verbose "NewADDrive: $($NewADDrive.Name)"
             Write-Verbose "UsedADDrives: $UsedADDrives"
         }
@@ -53,7 +61,7 @@ while ($true) {
     $Actions = [string[]]$Level_2_Menus.Values
     :SubMenuExitLabel
     while ($true) {
-        Clear-host -Force
+        #Clear-host -Force
         $SelectedMenuID = Show-Menu -Title "Actions for Domain:$Domain" -Choices $Actions
         if ($SelectedMenuID -eq 0) { break MainMenuExitLabel }
         $SelectedMenu = $Level_2_Menus[$SelectedMenuID - 1]
@@ -64,7 +72,7 @@ while ($true) {
                 3 { AddGroupMember $Domain}
                 4 { NewServiceAccountInNewOU $Domain}
                 5 { break SubMenuExitLabel }
-                6 { exit }
+                6 { $UsedADDrives.Remove($Domain.ToLower()); break MainMenuExitLabel}
                 default { Write-Warning "Unknown Option: $SelectedMenuID" }
             }
         } until (
@@ -73,7 +81,7 @@ while ($true) {
     }
 }
 # Cleanup
-Pop-Location
+if ( $SelectedMenu -ne 6 ) {Pop-Location}
 Write-Verbose "Removing AD drives used: $UsedADDrives"
 # Remove all previously used AD drives
 $UsedADDrives | 
