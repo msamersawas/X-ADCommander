@@ -1,6 +1,6 @@
 [cmdletbinding()]
 param()
-$ModulePath = "$PSScriptRoot\WindowsPowerShell\Modules\AD"
+$ModulePath = "$PSScriptRoot\WindowsPowerShell\Modules"
 Get-ChildItem $ModulePath -Include '*.psm1' -Recurse | Import-Module -Force -erroraction Stop
 $ADDrive =  $Domain = $NewADDrive = ''
 $UsedADDrives = [System.Collections.Generic.List[string]]::new()
