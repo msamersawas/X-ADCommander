@@ -36,7 +36,7 @@ while ($true) {
         Write-Host "Connecting to domain controller $Server in $Domain.............." -ForegroundColor Yellow
         $Credential = Get-Credential -Message "Enter credential for domain: $Domain"
         try {
-            $NewADDrive = New-ADDrive -DomainControllers $Server -Credential $Credential -ErrorAction Stop
+            $NewADDrive = New-ADDrive -DomainControllers $Server -Credential $Credential -NoConnectionTest -ErrorAction Stop
             $ADDrive = "$($NewADDrive):" 
             $UsedADDrives.Add(($NewADDrive.Name).ToLower())
             Write-Verbose "NewADDrive: $($NewADDrive.Name)"
