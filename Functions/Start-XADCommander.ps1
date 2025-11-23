@@ -1,22 +1,24 @@
+function Start-XADCommander {
 [cmdletbinding()]
 param()
-$ModulePath = "$PSScriptRoot\WindowsPowerShell\Modules"
-Get-ChildItem $ModulePath | select -ExpandProperty FullName | Import-Module -Force -erroraction Stop
 $ADDrive =  $Domain = $NewADDrive = ''
+Push-Location
+
+$ParentFolder = Split-Path $PSScriptRoot
+$DataFolder =Join-Path $ParentFolder 'Data'
+$Domain_Controllers_IPs_CSV = Import-Csv "$DataFolder\Domain_Controllers_IPs.csv"
+$Level_2_Menus_CSV = Import-Csv "$DataFolder\Level_2_Menus.csv"
+
 $UsedADDrives = [System.Collections.Generic.List[string]]::new()
 # Detect existing AD drives from a previous session to track them for clean-up (removal)
-$AllDomains = Import-Csv "$PSScriptRoot\Domain_Controllers_IPs.csv" | 
-    ForEach-Object { $_.Domain}
+$AllDomains = $Domain_Controllers_IPs_CSV | ForEach-Object { $_.Domain}
 Get-PSDrive |
     Where-Object {($_.Name -in $AllDomains) -and ($_.Provider -match 'ActiveDirectory')} |
     Select-Object -ExpandProperty Name |
     ForEach-Object {$UsedADDrives.Add($_.ToLower())}
 
-Set-Location $PSScriptRoot
-Push-Location
-
 $DomainControllerIP = [ordered]@{}
-Import-Csv "$PSScriptRoot\Domain_Controllers_IPs.csv" | ForEach-Object { $DomainControllerIP[$_.Domain] = $_.IP }
+$Domain_Controllers_IPs_CSV | ForEach-Object { $DomainControllerIP[$_.Domain] = $_.IP }
 $Options = [string[]]$DomainControllerIP.keys
 
 :MainMenuExitLabel
@@ -56,8 +58,7 @@ while ($true) {
     Set-Location "$($ADDrive)\"
 
     $Level_2_Menus = [ordered]@{}
-    Import-Csv "$PSScriptRoot\Level_2_Menus.csv" | 
-        ForEach-Object { $Level_2_Menus[$_.Menu_ID] = $_.Menu_Name }
+    $Level_2_Menus_CSV | ForEach-Object { $Level_2_Menus[$_.Menu_ID] = $_.Menu_Name }
     $Actions = [string[]]$Level_2_Menus.Values
     :SubMenuExitLabel
     while ($true) {
@@ -72,7 +73,7 @@ while ($true) {
                 3 { AddGroupMember $Domain}
                 4 { NewServiceAccountInNewOU $Domain}
                 5 { break SubMenuExitLabel }
-                6 { $UsedADDrives.Remove($Domain.ToLower()); break MainMenuExitLabel}
+                6 { $UsedADDrives.Remove($Domain.ToLower()) | Out-Null; break MainMenuExitLabel}
                 default { Write-Warning "Unknown Option: $SelectedMenuID" }
             }
         } until (
@@ -89,3 +90,4 @@ $UsedADDrives |
             Remove-PSDrive $_ -ErrorAction SilentlyContinue
     }
 Return
+}
