@@ -1,4 +1,6 @@
 
+After . Exit to AD drive prompt an foing back then exitting from XADCommander completly, current ADDrive is not removed
+
 'g','h' | Show-XADMenu not working properly
 
 
