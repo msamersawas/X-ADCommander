@@ -24,13 +24,13 @@ $Options = [string[]]$DomainControllerIP.keys
 :MainMenuExitLabel
 while ($true) {
     #Clear-Host -Force
-    $Option = Show-XadcMenu -Title 'Domains' -Choices $Options
+    $Option = Show-XADMenu -Title 'Domains' -Choices $Options
     if ($Option -eq 0) { 
         break MainMenuExitLabel 
     }
     $Domain = $Options[$Option - 1]
     # Determine if we can use an existing AD drive and that drive authentication with the domain is still valid
-    if (Test-XadcDrive -Name $Domain) {
+    if (Test-XADDrive -Name $Domain) {
         $ADDrive = "$($Domain):" 
     }
     else {
@@ -38,7 +38,7 @@ while ($true) {
         Write-Host "Connecting to domain controller $Server in $Domain.............." -ForegroundColor Yellow
         $Credential = Get-Credential -Message "Enter credential for domain: $Domain"
         try {
-            $NewADDrive = New-XadcDrive -DomainControllers $Server -Credential $Credential -NoConnectionTest -ErrorAction Stop
+            $NewADDrive = New-XADDrive -DomainControllers $Server -Credential $Credential -NoConnectionTest -ErrorAction Stop
             $ADDrive = "$($NewADDrive):" 
             $UsedADDrives.Add(($NewADDrive.Name).ToLower())
             Write-Verbose "NewADDrive: $($NewADDrive.Name)"
@@ -63,15 +63,15 @@ while ($true) {
     :SubMenuExitLabel
     while ($true) {
         #Clear-host -Force
-        $SelectedMenuID = Show-XadcMenu -Title "Actions for Domain:$Domain" -Choices $Actions
+        $SelectedMenuID = Show-XADMenu -Title "Actions for Domain:$Domain" -Choices $Actions
         if ($SelectedMenuID -eq 0) { break MainMenuExitLabel }
         $SelectedMenu = $Level_2_Menus[$SelectedMenuID - 1]
         do { 
             switch ($SelectedMenuID) {
-                1 { Reset-XadcUserPassword $Domain}
-                2 { New-XadcAdmin $Domain}
-                3 { Add-XadcGroupMember $Domain}
-                4 { New-XadcServiceAccount $Domain}
+                1 { Reset-XADUserPassword $Domain}
+                2 { New-XADAdmin $Domain}
+                3 { Add-XADGroupMember $Domain}
+                4 { New-XADServiceAccount $Domain}
                 5 { break SubMenuExitLabel }
                 6 { $UsedADDrives.Remove($Domain.ToLower()) | Out-Null; break MainMenuExitLabel}
                 default { Write-Warning "Unknown Option: $SelectedMenuID" }

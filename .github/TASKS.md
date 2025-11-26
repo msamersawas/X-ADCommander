@@ -1,5 +1,5 @@
 
-'g','h' | Show-XadcMenu not working properly
+'g','h' | Show-XADMenu not working properly
 
 
 

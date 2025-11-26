@@ -14,10 +14,10 @@
     Array of strings representing the menu entries.
 
 .EXAMPLE
-    $Choice = Show-XadcMenu -Title 'Actions' -Choices @('Create','Delete','Exit')
+    $Choice = Show-XADMenu -Title 'Actions' -Choices @('Create','Delete','Exit')
 
 .EXAMPLE
-    @('Option1', 'Option2') | Show-XadcMenu -Title 'Select Option'
+    @('Option1', 'Option2') | Show-XADMenu -Title 'Select Option'
 
 .OUTPUTS
     System.Int32
@@ -25,7 +25,7 @@
 .NOTES
     Version 1.0.0
 #>
-function Show-XadcMenu {
+function Show-XADMenu {
     [CmdletBinding()]
     [OutputType([int])]
     param (

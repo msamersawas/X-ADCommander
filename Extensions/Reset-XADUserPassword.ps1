@@ -1,7 +1,7 @@
 
-function Reset-XadcUserPassword {
+function Reset-XADUserPassword {
     param ([Parameter(Mandatory = $true)][string]$Domain)
-    if (-not (Test-XadcDrive -Name $Domain)) {
+    if (-not (Test-XADDrive -Name $Domain)) {
         Write-Host "Connection with the domain $Domain is no longer valid, exit and start over again" -ForegroundColor Red
         exit
     }

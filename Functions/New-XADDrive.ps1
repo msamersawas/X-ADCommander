@@ -1,4 +1,4 @@
-function New-XadcDrive {
+function New-XADDrive {
     <#
     .SYNOPSIS
        Create a new Active Directory PSDrive for a domain.
@@ -16,10 +16,10 @@ function New-XadcDrive {
         DomainControllers directly.
     .EXAMPLE
         $DCs = @('dc01.contoso.com','dc02.contoso.com')
-        New-XadcDrive -DomainControllers $DCs -Credential (Get-Credential)
+        New-XADDrive -DomainControllers $DCs -Credential (Get-Credential)
     .EXAMPLE
         # Skip connectivity tests and force using first DC
-        New-XadcDrive -DomainControllers 'dc01.contoso.com' -Credential (Get-Credential) -NoConnectionTest
+        New-XADDrive -DomainControllers 'dc01.contoso.com' -Credential (Get-Credential) -NoConnectionTest
     .OUTPUTS
         System.Management.Automation.PSDriveInfo
     .NOTES
