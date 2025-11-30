@@ -46,7 +46,7 @@ A PowerShell-based, extensible management framework for cross-forest Active Dire
 
 ## Adding Extensions
 
-- Use the following function template to add new custom function:
+- Use the following function template to add a new custom function:
 
 ```powershell
 function Verb-XADNoun {
