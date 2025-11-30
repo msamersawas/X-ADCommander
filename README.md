@@ -7,7 +7,7 @@ A PowerShell-based, extensible management framework for cross-forest Active Dire
 - PowerShell 5.1 or PowerShell 7+ (PowerShell Core)
 - The ActiveDirectory module (part of RSAT) must be available on the system.
 - Active Directory Web Services (ADWS) must be running on domain controller(s) configured in the module (see step 4 below), ADWS port (TCP 9389 by default) must be reachable from the system running the module.
-- Appropriate credentials for the target forests/domains.
+- Credentials of an account with administrative privileges or appropriate delegated permissions in the target forests/domains.
 
 ## Installation
 
@@ -17,14 +17,14 @@ A PowerShell-based, extensible management framework for cross-forest Active Dire
 2. Unzip the downloaded archive.
 
 3. Copy the `X-ADCommander` folder to one of your PowerShell module folders. Examples:
-   - Windows PowerShell (All users): `C:\Program Files\WindowsPowerShell\Modules\`
+   - Windows PowerShell (All users): `%Programfiles%\WindowsPowerShell\Modules\`
    - Windows PowerShell (Current user): `%UserProfile%\Documents\WindowsPowerShell\Modules\`
    - PowerShell Core (Current user): `%UserProfile%\Documents\PowerShell\Modules\`
 
    After copying, the module path should look like:
-   `C:\...\Modules\X-ADCommander\X-ADCommander.psm1` (or similar).
+   `...\Modules\X-ADCommander\X-ADCommander.psm1`
 
-4. Modify the file `Domain_Controllers_IPs.csv` with the domain names and IPs of domain controllers for each domain you need to manage.
+4. Modify the file `...\Modules\X-ADCommander\Data\Domain_Controllers_IPs.csv` to reflect the domain names and IPs of domain controllers for each target domain.
 
 5. If the files were downloaded as a ZIP from the internet, you may need to unblock them:
    - In PowerShell: `Get-ChildItem -Path .\X-ADCommander\* -Recurse | Unblock-File`
@@ -43,14 +43,13 @@ A PowerShell-based, extensible management framework for cross-forest Active Dire
 
 ## Notes
 
-- You may need administrative privileges or appropriate delegated permissions in the target Active Directory environments.
-- Ensure your execution policy allows running local modules. For example, to set `RemoteSigned` for the current user:
-  - `Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned -Force`
+- Ensure your execution policy allows running the module. For example, to set `Bypass` for the current user:
+  - `Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy Bypass -Force`
 
 
 ## Adding Extensions
 
-- Use the following template to add new custom functions:
+- Use the following template to add new custom function:
 
 ```powershell
 function Verb-XADNoun {
@@ -73,7 +72,7 @@ function Verb-XADNoun {
 }
 ```
 
-- Update the file `Level_2_Menus.csv` with the new custom functions.
+- Update the file `Level_2_Menus.csv` with a menu name for the new custom function.
 
 ## Issues and Contributions
 
