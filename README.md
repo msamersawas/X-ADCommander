@@ -16,7 +16,8 @@ A PowerShell-based, extensible management framework for cross-forest Active Dire
 
 2. Depending on the module installation folder (see example paths below), modify the file 
 `...\Modules\X-ADCommander\Data\Domain_Controllers_IPs.csv` to reflect the domain names and IPs of domain controllers for each target domain.
-PowerShell module folders. Examples:
+
+PowerShell module installation folder examples:
    - PowerShell Core and Windows PowerShell (All users): `%Programfiles%\WindowsPowerShell\Modules\`
    - Windows PowerShell (Current user): `%UserProfile%\Documents\WindowsPowerShell\Modules\`
    - PowerShell Core (Current user): `%UserProfile%\Documents\PowerShell\Modules\`
