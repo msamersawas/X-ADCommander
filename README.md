@@ -11,32 +11,27 @@ A PowerShell-based, extensible management framework for cross-forest Active Dire
 
 ## Installation
 
-1. Download the latest release (X-ADCommander.zip file) from:
-   https://github.com/msamersawas/X-ADCommander/releases
+# Method 1: using Powershell Gallery
 
-2. Unzip the downloaded archive.
+1- Install the module
+ - Install-Module -Name X-ADCommander
 
-3. Copy the `X-ADCommander` folder to one of your PowerShell module folders. Examples:
+2- Depending on the module installation folder (see example paths below), modify the file 
+`...\Modules\X-ADCommander\Data\Domain_Controllers_IPs.csv` to reflect the domain names and IPs of domain controllers for each target domain.
+PowerShell module folders. Examples:
    - PowerShell Core and Windows PowerShell (All users): `%Programfiles%\WindowsPowerShell\Modules\`
    - Windows PowerShell (Current user): `%UserProfile%\Documents\WindowsPowerShell\Modules\`
    - PowerShell Core (Current user): `%UserProfile%\Documents\PowerShell\Modules\`
 
-   After copying, the module path should look like:
-   `...\Modules\X-ADCommander\X-ADCommander.psm1`
-
-4. Modify the file `...\Modules\X-ADCommander\Data\Domain_Controllers_IPs.csv` to reflect the domain names and IPs of domain controllers for each target domain.
-
-5. Since the files were downloaded as a ZIP archive from the internet, you may need to unblock them:
-   - In PowerShell: `Get-ChildItem -Path .\X-ADCommander\* -Recurse | Unblock-File`
-
-6. Ensure your PowerShell execution policy allows running the module. For example, to set `Bypass` for the current user:
+3- Ensure your PowerShell execution policy allows running the module. For example, to set `Bypass` for the current user:
    - `Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy Bypass -Force`
 
-7. Import the module:
-   - `Import-Module X-ADCommander`
-
-8. Start the interactive console:
+4- Import the module
+ - Import-Module X-ADCommander
+ 
+5- Start the interactive console:
    - `Start-XADCommander`
+
 
 ## Usage
 

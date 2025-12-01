@@ -12,13 +12,13 @@
 RootModule = 'X-ADCommander.psm1'
 
 # Version number of this module.
-ModuleVersion = '1.0.3'
+ModuleVersion = '1.0.4'
 
 # Supported PSEditions
 # CompatiblePSEditions = @()
 
 # ID used to uniquely identify this module
-GUID = '9fef613b-33a4-43fe-812d-6b2644fe4a73'
+GUID = '6d189e05-d346-472f-9cb4-679b4ca0a877'
 
 # Author of this module
 Author = 'Mhd Samer Sawas'
@@ -107,7 +107,7 @@ PrivateData = @{
         # IconUri = ''
 
         # ReleaseNotes of this module
-        ReleaseNotes = '- Fixed exporting functions and password secure handling in testing Test-XADDrive.'
+        ReleaseNotes = '- Fixed functions prefix.'
 
         # Prerelease string of this module
         # Prerelease = ''
