@@ -25,7 +25,7 @@ function New-XADDrive {
     .NOTES
         Version 1.0.0
     #>
-    [CmdletBinding()]
+    [CmdletBinding(SupportsShouldProcess)]
     [OutputType('System.Management.Automation.PSDriveInfo')]
     param (
         [Parameter(Mandatory = $true,
@@ -69,7 +69,9 @@ function New-XADDrive {
         try {
             $DomainRoot = (Get-ADDomain -Server $Server -Credential $Credential).DistinguishedName
             $ADDriveName = (Get-ADDomain -Server $Server -Credential $Credential).Name
-            $ADDrive = New-PSDrive -Name $ADDriveName -PSProvider ActiveDirectory -Root $DomainRoot -Credential $Credential -Server $Server -Scope Global -ErrorAction Stop
+            if ($PSCmdlet.ShouldProcess("PSDrive $ADDriveName", "Create Active Directory PSDrive")) {
+                $ADDrive = New-PSDrive -Name $ADDriveName -PSProvider ActiveDirectory -Root $DomainRoot -Credential $Credential -Server $Server -Scope Global -ErrorAction Stop
+            }
         }
         catch {
             $ErrorRecord = [System.Management.Automation.ErrorRecord]::new(
